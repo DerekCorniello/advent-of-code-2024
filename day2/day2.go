@@ -87,15 +87,11 @@ func processLineP2(ints []int) bool {
 		// Combine both halves and check if the result is safe
 		modifiedReport := append(firstHalf, secondHalf...)
 		if processLineP1(modifiedReport) {
-			fmt.Printf("Report is safe by removing element at index %d: %v\n", i, modifiedReport)
 			return true
-		} else {
-			fmt.Printf("Trying by removing element at index %d: %v\n", i, modifiedReport)
 		}
 	}
 
 	// If no valid modification found, report remains unsafe
-	fmt.Println("No valid modification found. Report remains unsafe.")
 	return false
 }
 
