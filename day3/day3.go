@@ -65,7 +65,6 @@ func ProcessDay3p2() int {
 			return "\n" + match
 		})
 	commandsList := strings.Split(processedString, "\n")
-	fmt.Printf("%v", commandsList)
 
 	var sum int
 	for _, line := range commandsList {
