@@ -82,6 +82,57 @@ func isTopologicallySorted(update []string, graph map[string][]string) bool {
 	return true
 }
 
+// Kahn's alg
+// step by step given because this is new to me!
+func resortGraph(update []string, graph map[string][]string) []string {
+	// step 1: Initialize an in-degree map
+	inDegree := map[string]int{}
+	for _, page := range update {
+		inDegree[page] = 0
+	}
+	// calculate in-degrees for each page in the update
+	for _, page := range update {
+		for _, dep := range graph[page] {
+			if _, exists := inDegree[dep]; exists {
+				inDegree[dep]++
+			}
+		}
+	}
+
+	// step 2: Initialize a queue with all pages having 0 in-degree
+	queue := []string{}
+	for page, degree := range inDegree {
+		if degree == 0 {
+			queue = append(queue, page)
+		}
+	}
+
+	// step 3: Perform Kahn's algorithm (topological sort)
+	sortedPages := []string{}
+	for len(queue) > 0 {
+		// get the next page with 0 in-degree
+		page := queue[0]
+		queue = queue[1:]
+		sortedPages = append(sortedPages, page)
+
+		// decrease the in-degree of its neighbors
+		for _, dep := range graph[page] {
+			inDegree[dep]--
+			if inDegree[dep] == 0 {
+				queue = append(queue, dep)
+			}
+		}
+	}
+
+	// if sortedPages doesn't have all pages, it means there's a cycle
+	if len(sortedPages) != len(update) {
+		panic("Cycle detected or incomplete sorting!")
+	}
+
+	// step 4: Return the newly sorted pages
+	return sortedPages
+}
+
 func ProcessDay5p1() int {
 	relations, updates := parseFile("day5/input.txt")
 	graph := buildGraph(relations)
@@ -115,6 +166,37 @@ func ProcessDay5p1() int {
 }
 
 func ProcessDay5p2() int {
+	relations, updates := parseFile("day5/input.txt")
+	graph := buildGraph(relations)
 
-	return 0
+	validMiddleValues := []int{}
+
+	for _, update := range updates {
+		if !isTopologicallySorted(update, graph) {
+			// Resort the update if it's not in order
+			update = resortGraph(update, graph)
+            // now do middle val
+            n := len(update)
+            middleValue := update[n/2]
+
+            // take left val if even
+            if n%2 == 0 {
+                middleValue = update[(n/2)-1]
+            }
+
+            mid, err := strconv.Atoi(middleValue)
+            if err != nil {
+                panic(fmt.Sprintf("Invalid middle value: %v. Aborting.", err))
+            }
+            validMiddleValues = append(validMiddleValues, mid)
+		}
+	}
+
+	// Compute the sum of all valid middle values
+	sum := 0
+	for _, val := range validMiddleValues {
+		sum += val
+	}
+
+	return sum
 }
