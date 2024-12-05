@@ -22,6 +22,12 @@ func parseFile(filename string) string {
 		inputString = inputString + scanner.Text()
 	}
 
+	err = scanner.Err()
+
+	if err != nil {
+		panic(fmt.Sprintf("Error scanning file! Error: %v. Aborting", err.Error()))
+	}
+
 	return inputString
 }
 

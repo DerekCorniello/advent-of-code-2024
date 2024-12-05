@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sync"
 )
 
 func parseFile(filename string) ([][]rune, int, int) {
@@ -18,6 +19,12 @@ func parseFile(filename string) ([][]rune, int, int) {
 
 	for scanner.Scan() {
 		grid = append(grid, []rune(scanner.Text()))
+	}
+
+	err = scanner.Err()
+
+	if err != nil {
+		panic(fmt.Sprintf("Error scanning file! Error: %v. Aborting", err.Error()))
 	}
 
 	return grid, len(grid[0]), len(grid)
@@ -84,17 +91,17 @@ func ProcessDay4p2() int {
 	grid, width, height := parseFile("day4/input.txt")
 
 	checkCrossMas := func(x int, y int) bool {
-        // if its not an A in the middle, its not a cross
+		// if it's not an 'A' in the middle, it's not a cross
 		if grid[x][y] != rune('A') {
 			return false
 		}
 
-        // check bounds
+		// check bounds
 		if x <= 0 || y <= 0 || x >= height-1 || y >= width-1 {
 			return false
 		}
 
-        // create a string of both corsses
+		// create a string of both crosses
 		diagonal1 := []rune{grid[x-1][y-1], grid[x+1][y+1]}
 		diagonal2 := []rune{grid[x-1][y+1], grid[x+1][y-1]}
 
@@ -107,14 +114,26 @@ func ProcessDay4p2() int {
 		return isMas(diagonal1) && isMas(diagonal2)
 	}
 
+	var wg sync.WaitGroup
+	var mu sync.Mutex // Mutex to protect findCount from concurrent writes
+
 	// Iterate through the grid
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
-			if checkCrossMas(i, j) {
-				findCount++
-			}
+			wg.Add(1)
+			go func(x, y int) {
+				defer wg.Done()
+				if checkCrossMas(x, y) {
+					mu.Lock()
+					findCount++
+					mu.Unlock()
+				}
+			}(i, j)
 		}
 	}
+
+	// Wait for all goroutines to finish
+	wg.Wait()
 
 	return findCount
 }
