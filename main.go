@@ -7,6 +7,7 @@ import (
 	"github.com/DerekCorniello/advent-of-code-2024/day3"
 	"github.com/DerekCorniello/advent-of-code-2024/day4"
 	"github.com/DerekCorniello/advent-of-code-2024/day5"
+	"github.com/DerekCorniello/advent-of-code-2024/day6"
 )
 
 func main() {
@@ -15,4 +16,5 @@ func main() {
 	fmt.Printf("Output of Day 3: `%v`, `%v`.\n", day3.ProcessDay3p1(), day3.ProcessDay3p2())
 	fmt.Printf("Output of Day 4: `%v`, `%v`.\n", day4.ProcessDay4p1(), day4.ProcessDay4p2())
 	fmt.Printf("Output of Day 5: `%v`, `%v`.\n", day5.ProcessDay5p1(), day5.ProcessDay5p2())
+	fmt.Printf("Output of Day 6: `%v`, `%v`.\n", day6.ProcessDay6p1(), day6.ProcessDay6p2())
 }
