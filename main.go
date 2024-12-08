@@ -11,6 +11,7 @@ import (
 	"github.com/DerekCorniello/advent-of-code-2024/day4"
 	"github.com/DerekCorniello/advent-of-code-2024/day5"
 	"github.com/DerekCorniello/advent-of-code-2024/day6"
+	"github.com/DerekCorniello/advent-of-code-2024/day7"
 )
 
 func main() {
@@ -22,7 +23,7 @@ func main() {
  	}
 
 	day, err := strconv.Atoi(os.Args[1])
-	if err != nil || day < 1 || day > numDays {
+	if err != nil {
 		fmt.Printf("Please provide a valid day number (1-%d).\n", numDays)
 		return
 	}
@@ -40,5 +41,9 @@ func main() {
 		fmt.Printf("Output of Day 5: `%v`, `%v`.\n", day5.ProcessDay5p1(), day5.ProcessDay5p2())
 	case 6:
 		fmt.Printf("Output of Day 6: `%v`, `%v`.\n", day6.ProcessDay6p1(), day6.ProcessDay6p2())
+	case 7:
+		fmt.Printf("Output of Day 7: `%v`, `%v`.\n", day7.ProcessDay7p1(), day7.ProcessDay7p2())
+    default:
+        fmt.Printf("No output for Day %d.", day)
 	}
 }
